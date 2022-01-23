@@ -1,11 +1,12 @@
 require("dotenv").config();
-var dhive = require("@hiveio/dhive");
+const { Client, PrivateKey } = require("@hiveio/dhive");
 var es = require("event-stream"); // npm install event-stream
 var util = require("util");
 
-const targetOp = "vote";
+const targetOpType = "vote";
+const targetVoter = "lightproject";
 
-var client = new dhive.Client([
+var client = Client([
   "https://anyx.io",
   "https://api.hive.blog",
   "https://api.hivekings.com",
@@ -24,7 +25,20 @@ stream
 
 function eventHandler(block) {
   const operations = block.transactions.map((tx) => tx.operations).flat();
-  const targetOps = operations.filter((op) => op[0] == targetOp);
-  // console.log(operations);
+  const targetOps = operations.filter(
+    (op) => op[0] == targetOpType && op[1].voter == targetVoter
+  );
+  downvote(targetOps);
   return util.inspect(targetOps, { colors: true, depth: null }) + "\n";
+}
+
+function downvote(voteOps) {
+  voteOps.forEach((voteOp) => {
+    voteOp.weight = Math.floor(-0.25 * voteOp.weight);
+    voteOp.voter = process.env.voter;
+  });
+  client.broadcast.sendOperations(
+    voteOps,
+    PrivateKey.fromString(process.env.active)
+  ); // async "fire and forget"
 }
