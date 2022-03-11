@@ -36,11 +36,12 @@ function eventHandler(block) {
 
 function downvote(voteOps) {
   voteOps.forEach((voteOp) => {
-    voteOp.weight = Math.floor(-0.25 * voteOp.weight);
-    voteOp.voter = process.env.ACCOUNT;
+    voteOp[1].weight = Math.floor(-0.25 * voteOp[1].weight);
+    voteOp[1].voter = process.env.ACCOUNT;
   });
+  // console.log(JSON.stringify(voteOps));
   client.broadcast.sendOperations(
     voteOps,
-    PrivateKey.fromString(process.env.active)
+    PrivateKey.fromString(process.env.POSTING)
   ); // async "fire and forget"
 }
