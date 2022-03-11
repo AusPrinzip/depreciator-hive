@@ -15,6 +15,8 @@ var client = new Client([
 
 var stream = client.blockchain.getBlockStream();
 
+console.log(`Starting downvoting trail bot with target: ${process.env.TARGET}`);
+
 stream
   .pipe(
     es.map(function (block, callback) {
