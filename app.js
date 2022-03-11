@@ -4,9 +4,9 @@ var es = require("event-stream"); // npm install event-stream
 var util = require("util");
 
 const targetOpType = "vote";
-const targetVoter = "lightproject";
+const targetVoter = process.env.TARGET;
 
-var client = Client([
+var client = new Client([
   "https://anyx.io",
   "https://api.hive.blog",
   "https://api.hivekings.com",
@@ -28,14 +28,16 @@ function eventHandler(block) {
   const targetOps = operations.filter(
     (op) => op[0] == targetOpType && op[1].voter == targetVoter
   );
-  downvote(targetOps);
-  return util.inspect(targetOps, { colors: true, depth: null }) + "\n";
+  if (targetOps.length > 0) {
+    downvote(targetOps);
+    return util.inspect(targetOps, { colors: true, depth: null }) + "\n";
+  }
 }
 
 function downvote(voteOps) {
   voteOps.forEach((voteOp) => {
     voteOp.weight = Math.floor(-0.25 * voteOp.weight);
-    voteOp.voter = process.env.voter;
+    voteOp.voter = process.env.ACCOUNT;
   });
   client.broadcast.sendOperations(
     voteOps,
