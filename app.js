@@ -4,7 +4,7 @@ var es = require("event-stream"); // npm install event-stream
 var util = require("util");
 
 const targetOpType = "vote";
-const targetVoter = process.env.TARGET;
+const targets = ["ocdb", "steemmonsters", "appreciator", "alpha", "smooth", "blocktrades"]
 
 var client = new Client([
   "https://anyx.io",
@@ -15,7 +15,7 @@ var client = new Client([
 
 var stream = client.blockchain.getBlockStream();
 
-console.log(`Starting downvoting trail bot with target: ${process.env.TARGET}`);
+console.log(`Starting downvoting trail bot`);
 
 stream
   .pipe(
@@ -28,7 +28,7 @@ stream
 function eventHandler(block) {
   const operations = block.transactions.map((tx) => tx.operations).flat();
   const targetOps = operations.filter(
-    (op) => op[0] == targetOpType && op[1].voter == targetVoter
+    (op) => op[0] == targetOpType && targets.includes(op[1].voter)
   );
   if (targetOps.length > 0) {
     downvote(targetOps);
@@ -39,7 +39,7 @@ function eventHandler(block) {
 function downvote(voteOps) {
   voteOps.forEach((voteOp) => {
     voteOp[1].weight = Math.floor(-0.25 * voteOp[1].weight);
-    voteOp[1].voter = process.env.ACCOUNT;
+    voteOp[1].voter = `x${voteOp[1].voter}`
   });
   // console.log(JSON.stringify(voteOps));
   client.broadcast.sendOperations(
