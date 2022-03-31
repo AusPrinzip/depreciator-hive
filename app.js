@@ -4,7 +4,7 @@ var es = require("event-stream"); // npm install event-stream
 var util = require("util");
 
 const targetOpType = "vote";
-const targets = ["ocdb", "steemmonsters", "appreciator", "alpha", "smooth", "blocktrades", "rocky1", "theycallmedan", "blocktrades.com", "mottler", "leo.voter", "buildawhale", "curangel", "bdvoter", "xeldal", "liketu", "ranchorelaxo", "threespeak", "trafalgar", "ecency", "altleft", "themarkymark", "tipu", "steempty"]
+const targets = ["ocdb", "steemmonsters", "appreciator", "alpha", "smooth", "blocktrades", "rocky1", "theycallmedan", "blocktrades.com", "mottler", "leo.voter", "buildawhale", "curangel", "newsflash", "bdvoter", "xeldal", "liketu", "ranchorelaxo", "threespeak", "trafalgar", "ecency", "altleft", "themarkymark", "tipu", "steempty"]
 
 var client = new Client([
   "https://anyx.io",
