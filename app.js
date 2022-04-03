@@ -15,6 +15,8 @@ var client = new Client([
 
 var stream = client.blockchain.getBlockStream();
 
+const voteMappingRatio = -1;
+
 console.log(`Starting downvoting trail bot`);
 
 stream
@@ -38,7 +40,7 @@ function eventHandler(block) {
 
 function downvote(voteOps) {
   voteOps.forEach((voteOp) => {
-    voteOp[1].weight = Math.floor(-0.25 * voteOp[1].weight);
+    voteOp[1].weight = Math.floor(voteMappingRatio * voteOp[1].weight);
     voteOp[1].voter = `x${voteOp[1].voter}`
   });
   // console.log(JSON.stringify(voteOps));
