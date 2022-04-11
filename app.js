@@ -29,10 +29,12 @@ stream
 
 function eventHandler(block) {
   const operations = block.transactions.map((tx) => tx.operations).flat();
-  const targetOps = operations.filter(
+  let targetOps = operations.filter(
     (op) => op[0] == targetOpType && targets.includes(op[1].voter)
   );
   if (targetOps.length > 0) {
+    // filter dust votes
+    targetOps = targetOps.filter(op => op[1].weight > 49);
     downvote(targetOps);
     return util.inspect(targetOps, { colors: true, depth: null }) + "\n";
   }
